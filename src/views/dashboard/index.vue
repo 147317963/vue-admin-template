@@ -1,30 +1,13 @@
-<template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
-  </div>
-</template>
-
 <script>
-import { mapGetters } from 'vuex'
-
-export default {
-  name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
-  }
-}
+    export default {
+        name: "Redirect",
+        created() {
+            const { params, query } = this.$route;
+            const { path } = params;
+            this.$router.replace({ path: "/" + path, query });
+        },
+        render: function (h) {
+            return h();
+        },
+    };
 </script>
-
-<style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
-</style>

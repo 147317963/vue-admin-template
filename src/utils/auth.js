@@ -1,15 +1,15 @@
+import {  tokenTableName } from "@/config/settings";
 
-const TokenKey = 'vue_admin_token'
 
 export function getToken() {
-  return  localStorage.getItem(TokenKey);
+  return  localStorage.getItem(tokenTableName);
 }
 
 export function setToken(token) {
-  return  localStorage.setItem(TokenKey, token); //设置token
+  return  localStorage.setItem(tokenTableName, token); //设置token
 
 }
 
 export function removeToken() {
-  return localStorage.removeItem(TokenKey);
+  return localStorage.removeItem(tokenTableName);
 }

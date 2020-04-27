@@ -3,21 +3,19 @@ import {getToken, setToken, removeToken} from '@/utils/auth'
 import {resetRouter} from '@/router'
 import CryptoJS from 'crypto-js';
 import { Notification } from "element-ui";
-const getDefaultState = () => {
-    return {
-        token: getToken(),
-        name: '',
-        avatar: ''
-    }
-}
 
-const state = getDefaultState()
+
+const state = {
+    token:getToken(),
+    name:'',
+    roles:[],
+    avatar:'',
+}
 
 const mutations = {
     //重置状态
-    RESET_STATE: (state) => {
-        //合并数据
-        Object.assign(state, getDefaultState())
+    RESET_STATE: (state,token) => {
+        state.token = token;
     },
     //设置token
     SET_TOKEN: (state, token) => {
@@ -30,7 +28,10 @@ const mutations = {
     //设置图片地址
     SET_AVATAR: (state, avatar) => {
         state.avatar = avatar
-    }
+    },
+    SET_ROLES: (state, roles) => {
+        state.roles = roles;
+    },
 }
 
 const actions = {
@@ -50,6 +51,8 @@ const actions = {
             }).then(response => {
                 const {data} = response
                 commit('SET_TOKEN', data.token);
+                commit('SET_NAME', data.datas.name);
+                commit('SET_AVATAR', data.datas.avatar);
                 setToken(data.token)
                 const time = new Date();
                 const hour = time.getHours();
@@ -72,13 +75,13 @@ const actions = {
     getInfo({commit, state}) {
         return new Promise((resolve, reject) => {
             getInfo(state.token).then(response => {
-                const {data} = response
+                const {datas} = response.data
 
-                if (!data) {
+                if (!datas) {
                     reject('验证失败，请重新登录...')
                 }
 
-                const {name, avatar} = data
+                const {name, avatar} = datas
 
                 commit('SET_NAME', name)
                 commit('SET_AVATAR', avatar)
@@ -113,10 +116,5 @@ const actions = {
     }
 }
 
-export default {
-    namespaced: true,
-    state,
-    mutations,
-    actions
-}
+export default {namespaced: true, state, mutations, actions}
 
