@@ -9,7 +9,7 @@ import Vue from 'vue'
 import "./element"; //引入element-ui
 import "@/icons";//引入icons
 import "./byuiIcon";//引入icons
-import '@/config/permission' // 路由卫士
+import "@/config/permission"; // 路由卫士
 import VueLazyload from 'vue-lazyload' //图片懒加载
 
 

@@ -45,19 +45,21 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
 
-      // 50008:非法令牌;50012:其他客户登录;50014:令牌过期;
-      if (response.data.code === 403 || response.data.code === 403 || response.data.code === 403) {
+      // 403:需要登录或者重新登录;
+      if (response.data.code === 403) {
         // to re-login
         MessageBox.confirm('您已经登出，您可以取消以停留在此页面，或再次登录', '确认注销', {
           confirmButtonText: 'Re-Login',
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
+          //去除token
           store.dispatch('user/resetToken').then(() => {
             location.reload();
           })
         })
       }
+      //抛出错误
       return Promise.reject(new Error(response.data.message || 'Error'))
     } else {
       //等于200都算成功

@@ -51,8 +51,6 @@ const actions = {
             }).then(response => {
                 const {data} = response
                 commit('SET_TOKEN', data.token);
-                commit('SET_NAME', data.datas.name);
-                commit('SET_AVATAR', data.datas.avatar);
                 setToken(data.token)
                 const time = new Date();
                 const hour = time.getHours();
