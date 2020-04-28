@@ -74,16 +74,14 @@ const actions = {
         return new Promise((resolve, reject) => {
             getInfo(state.token).then(response => {
                 const {datas} = response.data
-
                 if (!datas) {
                     reject('验证失败，请重新登录...')
                 }
-
-                const {name, avatar} = datas
-
+                const {name, avatar,roles} = datas
                 commit('SET_NAME', name)
                 commit('SET_AVATAR', avatar)
-                resolve(data)
+                commit('SET_ROLES', roles)
+                resolve(datas)
             }).catch(error => {
                 reject(error)
             })

@@ -6,9 +6,9 @@ function resolve(dir) {
 module.exports = {
     chainWebpack: config => {
 
-
+        console.log(__dirname);
         config.resolve.alias
-            .set('@', resolve('/src'))
+            .set('@', resolve('src'))
             //.set('mui', path.resolve(__dirname, './src/assets/js/mui.js'))
 
         // set svg-sprite-loader

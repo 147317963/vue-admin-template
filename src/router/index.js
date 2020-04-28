@@ -51,18 +51,7 @@ export const constantRoutes = [
             },
         ],
     },
-    {
-        path: '/404',
-        name:'404',
-        component: () => import('@/views/404'),
-        hidden: true
-    },
-    {
-        path: '/401',
-        name:'401',
-        component: () => import('@/views/401'),
-        hidden: true
-    },
+
 ];
 /**
 * asyncRoutes
@@ -87,6 +76,22 @@ export const asyncRoutes = [
                 },
             },
         ],
+    },
+
+
+
+
+    {
+        path: '/404',
+        name:'404',
+        component: () => import('@/views/404'),
+        hidden: true
+    },
+    {
+        path: '/401',
+        name:'401',
+        component: () => import('@/views/401'),
+        hidden: true
     },
 
 

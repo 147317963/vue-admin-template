@@ -25,16 +25,15 @@ export default {
   },
   methods: {
     click() {
-      this.Message({
-        offset: 60,
-        showClose: true,
-        message: '开启全屏失败',
-        type: "error",
-        dangerouslyUseHTMLString: true,
-        duration: messageDuration,
-      });
       if (!screenfull.isEnabled) {
-
+        this.Message({
+          offset: 60,
+          showClose: true,
+          message: '开启全屏失败',
+          type: "error",
+          dangerouslyUseHTMLString: true,
+          duration: 2000,
+        });
         return false;
       }
       screenfull.toggle();

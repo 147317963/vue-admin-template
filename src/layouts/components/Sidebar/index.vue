@@ -14,7 +14,7 @@
       mode="vertical"
     >
       <sidebar-item
-        v-for="route in router"
+        v-for="route in routes"
         :key="route.path"
         :base-path="route.path"
         :item="route"

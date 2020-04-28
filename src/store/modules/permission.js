@@ -43,16 +43,22 @@ const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
-  }
+  },
+  SET_ALL_ROUTES: (state, routes) => {
+    state.routes = constantRoutes.concat(routes);
+  },
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) {
+  setRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes
+      //角色权限是否是admin
       if (roles.includes('admin')) {
+        //是就导入全部异步路由
         accessedRoutes = asyncRoutes || []
       } else {
+        //不是就查询该用户能操作的异步路由
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
       commit('SET_ROUTES', accessedRoutes)

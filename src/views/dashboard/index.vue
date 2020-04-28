@@ -1,4 +1,5 @@
 <script>
+    //点击刷新按钮后
     export default {
         name: "Redirect",
         created() {

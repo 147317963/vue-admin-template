@@ -1,15 +1,15 @@
-import {  tokenTableName } from "@/config/settings";
+import {  tokenName } from "@/config/settings";
 
 
 export function getToken() {
-  return  localStorage.getItem(tokenTableName);
+  return  localStorage.getItem(tokenName);
 }
 
 export function setToken(token) {
-  return  localStorage.setItem(tokenTableName, token); //设置token
+  return  localStorage.setItem(tokenName, token); //设置token
 
 }
 
 export function removeToken() {
-  return localStorage.removeItem(tokenTableName);
+  return localStorage.removeItem(tokenName);
 }

@@ -1,22 +1,5 @@
 <template>
-    <div class="index-container">
-        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
-            <el-card shadow="never">
-                <div slot="header">
-                    <span>词云</span>
-                </div>
-                <byui-chart
-                        :autoresize="true"
-                        theme="byui-echarts-theme"
-                        :options="cy"
-                        @zr:click="handleZrClick"
-                        @click="handleClick"
-                />
-                <div class="bottom">
-                </div>
-            </el-card>
-        </el-col>
-    </div>
+
 </template>
 
 <script>
@@ -24,35 +7,8 @@
     export default {
         name: "index",
         data() {
-            return {
-                config1: {
-                    startVal: 0,
-                    endVal: 43,
-                    decimals: 0,
-                    prefix: "",
-                    suffix: "",
-                    separator: ",",
-                    duration: 3000,
-                },
-                config2: {
-                    startVal: 0,
-                    endVal: 82,
-                    decimals: 0,
-                    prefix: "",
-                    suffix: "",
-                    separator: ",",
-                    duration: 3000,
-                },
-                config3: {
-                    startVal: 0,
-                    endVal: 12,
-                    decimals: 0,
-                    prefix: "",
-                    suffix: "",
-                    separator: ",",
-                    duration: 3000,
-                },
-            }
+            return {}
+
         },
         methods: {//条用方法
         },

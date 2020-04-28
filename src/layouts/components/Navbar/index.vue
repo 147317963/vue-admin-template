@@ -15,7 +15,7 @@
       <el-col :xs="20" :sm="12" :md="12" :lg="12" :xl="12">
         <div class="right-panel">
           <error-log />
-          <byui-screenfull @refresh="refreshSelectedTag"></byui-screenfull>
+          <screenfull @refresh="refreshSelectedTag"></screenfull>
           <theme-bar></theme-bar>
           <byui-icon
             title="重载路由"
@@ -28,9 +28,10 @@
             <span class="el-dropdown-link">
               <el-avatar
                 class="user-avatar"
-                v-lazy=""
+                :src="require('@/assets/user.gif')"
               ></el-avatar>
               <span class="user-name">{{ name }}</span>
+              <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>
@@ -58,7 +59,7 @@
 <script>
 import { mapGetters } from "vuex";
 import ErrorLog from "@/components/ErrorLog";
-import ByuiScreenfull from "@/components/ByuiScreenfull";
+import Screenfull from "@/components/Screenfull";
 import Breadcrumb from "@/layouts/components/Breadcrumb";
 import ThemeBar from "@/layouts/components/ThemeBar";
 
@@ -66,7 +67,7 @@ export default {
   components: {
     Breadcrumb,
     ErrorLog,
-    ByuiScreenfull,
+    Screenfull,
     ThemeBar,
   },
   data() {
@@ -88,7 +89,7 @@ export default {
   methods: {
     handleCollapse() {
       this.$store.dispatch("settings/changeCollapse");
-      if ("mobile" == this.device && false === this.collapse) {
+      if ("mobile" === this.device && false === this.collapse) {
         $("body").attr("style", "overflow:hidden");
       }
     },
@@ -133,92 +134,87 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.nav-bar-container {
-  user-select: none;
-  height: 50px;
-  overflow: hidden;
-  position: relative;
-  background: $base-color-white;
-  box-shadow: $base-box-shadow;
-
-  .left-panel {
-    display: flex;
-    justify-items: center;
-    align-items: center;
+  .nav-bar-container {
+    user-select: none;
     height: 50px;
-    max-height: 50px;
-
-    .fold-unfold {
-      font-size: 20px;
-      color: $base-color-gray;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-
-    .fold-unfold.el-icon-s-unfold {
-    }
-
-    ::v-deep {
-      .breadcrumb-container {
+    overflow: hidden;
+    position: relative;
+    background: $base-color-white;
+    box-shadow: $base-box-shadow;
+    .left-panel {
+      display: flex;
+      justify-items: center;
+      align-items: center;
+      height: 50px;
+      max-height: 50px;
+      .fold-unfold {
+        font-size: 20px;
+        color: $base-color-gray;
+        cursor: pointer;
         margin-left: 10px;
       }
-    }
-  }
-
-  .right-panel {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    align-content: center;
-    height: 50px;
-
-    .user-avatar {
-      margin-right: 5px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .user-name {
-      margin-right: 15px;
-      margin-left: 5px;
-      cursor: pointer;
-      font-weight: 600;
-      position: relative;
-      top: -12px;
-    }
-
-    ::v-deep {
-      svg {
-        width: 1em;
-        height: 1em;
-        color: $base-color-gray;
-        fill: $base-color-gray;
-        margin-right: 15px;
-        cursor: pointer;
-        font-size: $base-font-size-big;
-        cursor: pointer;
+      .fold-unfold.el-icon-s-unfold {
       }
-
-      button {
-        svg {
-          color: $base-color-white;
-          fill: $base-color-white;
-          margin-right: 0px;
-          cursor: pointer;
+      ::v-deep {
+        .breadcrumb-container {
+          margin-left: 10px;
         }
       }
-
-      .el-badge {
-        margin-right: 15px;
+    }
+    .right-panel {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      align-content: center;
+      height: 50px;
+      .user-avatar {
+        margin-right: 5px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .user-name {
+        margin-right: 35px;
+        margin-left: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        position: relative;
+        top: -14px;
+      }
+      .user-name + i {
+        position: absolute;
+        top: 16px;
+        right: 15px;
+      }
+      ::v-deep {
+        svg {
+          width: 1em;
+          height: 1em;
+          color: $base-color-gray;
+          fill: $base-color-gray;
+          margin-right: 15px;
+          cursor: pointer;
+          font-size: $base-font-size-big;
+          cursor: pointer;
+        }
+        button {
+          svg {
+            color: $base-color-white;
+            fill: $base-color-white;
+            margin-right: 0px;
+            cursor: pointer;
+          }
+        }
+        .el-badge {
+          margin-right: 15px;
+        }
       }
     }
   }
-}
 </style>
 <style>
-.el-dropdown-menu--small .el-dropdown-menu__item {
-  line-height: 36px !important;
-  padding: 0 15px;
-  font-size: 13px;
-}
+  .el-dropdown-menu--small .el-dropdown-menu__item {
+    line-height: 36px !important;
+    padding: 0 15px;
+    font-size: 13px;
+  }
 </style>

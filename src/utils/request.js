@@ -48,16 +48,15 @@ service.interceptors.response.use(
       // 403:需要登录或者重新登录;
       if (response.data.code === 403) {
         // to re-login
-        MessageBox.confirm('您已经登出，您可以取消以停留在此页面，或再次登录', '确认注销', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
+        // MessageBox.confirm('您已经登出，您可以取消以停留在此页面，或再次登录', '确认注销', {
+        //   confirmButtonText: 'Re-Login',
+        //   cancelButtonText: 'Cancel',
+        //   type: 'warning'
+        // }).then(() => {
           //去除token
-          store.dispatch('user/resetToken').then(() => {
-            location.reload();
-          })
-        })
+          store.dispatch('user/resetToken')
+            // location.reload();
+          // })
       }
       //抛出错误
       return Promise.reject(new Error(response.data.message || 'Error'))
