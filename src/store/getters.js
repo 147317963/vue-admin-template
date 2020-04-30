@@ -1,21 +1,18 @@
 const getters = {
-  device: (state) => state.app.device,
-  token: (state) => state.user.token,
-  avatar: (state) => state.user.avatar,
-  collapse: (state) => state.settings.collapse,
-  cachedViews: (state) => state.tagsView.cachedViews,
-  errorLogs: (state) => state.errorLog.logs,
-  header: (state) => state.settings.header,
-  lastLoginTime: (state) => state.user.lastLoginTime,
-  layout: (state) => state.settings.layout,
-  logo: (state) => state.settings.logo,
-  loginTimes: (state) => state.user.loginTimes,
-  name: (state) => state.user.name,
-  roles: (state) => state.user.roles,
-  routes: (state) => state.permission.routes,
-  selectedTag: (state) => state.tagsView.selectedTag,
-  srcTableCode: (state) => state.table.srcCode,
-  tagsView: (state) => state.settings.tagsView,
-  visitedViews: (state) => state.tagsView.visitedViews,
-};
-export default getters;
+  sidebar: state => state.app.sidebar,
+  size: state => state.app.size,
+  device: state => state.app.device,
+  visitedViews: state => state.tagsView.visitedViews,
+  cachedViews: state => state.tagsView.cachedViews,
+  token: state => state.user.token,
+  avatar: state => state.user.avatar,
+  name: state => state.user.name,
+  introduction: state => state.user.introduction,
+  roles: state => state.user.roles,//角色权限
+  routes: state => state.permission.routes, //异步路由
+  errorLogs: state => state.errorLog.logs,//错误信息
+  showSettings: state => state.settings.showSettings,
+  needTagsView: state => state.settings.tagsView,
+  fixedHeader: state => state.settings.fixedHeader
+}
+export default getters

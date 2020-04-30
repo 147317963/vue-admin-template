@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { abbreviation, title } from "@/config/settings";
+import { abbreviation, title } from "@/settings";
 
 export default {
   name: "ErrorLog",

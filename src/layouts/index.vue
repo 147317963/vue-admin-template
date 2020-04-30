@@ -1,274 +1,102 @@
 <template>
-  <div class="app-wrapper" :class="classObj">
-    <div
-      v-if="'horizontal' === layout"
-      class="layout-container-horizontal"
-      :class="{
-        fixed: header === 'fixed',
-        'no-tags-view': tagsView === 'false' || tagsView === false,
-      }"
-    >
-      <div :class="header === 'fixed' ? 'fixed-header' : ''">
-        <top-bar />
-        <div
-          v-if="tagsView === 'true' || tagsView === true"
-          :class="{ 'tag-view-show': tagsView }"
-        >
-          <byui-main>
-            <tags-view />
-          </byui-main>
-        </div>
+  <div :class="classObj" class="app-wrapper">
+    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+    <sidebar class="sidebar-container" />
+    <div :class="{hasTagsView:needTagsView}" class="main-container">
+      <div :class="{'fixed-header':fixedHeader}">
+        <navbar />
+        <tags-view v-if="needTagsView" />
       </div>
-      <byui-main class="main-padding">
-        <nav-bar />
-        <app-main />
-      </byui-main>
+      <app-main />
+      <right-panel v-if="showSettings">
+        <settings />
+      </right-panel>
     </div>
-    <div
-      v-else
-      class="layout-container-vertical"
-      :class="{
-        fixed: header === 'fixed',
-        'no-tags-view': tagsView === 'false' || tagsView === false,
-      }"
-    >
-      <div
-        v-if="device === 'mobile' && collapse === false"
-        class="mask"
-        @click="handleClickOutside"
-      />
-      <side-bar />
-      <byui-main :class="collapse ? 'is-collapse-main' : ''">
-        <div :class="header === 'fixed' ? 'fixed-header' : ''">
-          <nav-bar />
-          <tags-view v-if="tagsView === 'true' || tagsView === true" />
-        </div>
-        <app-main />
-      </byui-main>
-    </div>
-    <byui-back-to-top transition-name="fade" />
   </div>
 </template>
 
 <script>
-import { AppMain, NavBar, SideBar, TagsView, TopBar } from "./components";
-import ByuiMain from "@/components/ByuiMain";
-import ByuiBackToTop from "@/components/ByuiBackToTop";
-import { mapGetters } from "vuex";
-import { tokenName } from "@/config/settings";
-import ResizeMixin from "./mixin/Resize";
+import RightPanel from '@/components/RightPanel'
+import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
+import ResizeMixin from './mixin/ResizeHandler'
+import { mapState } from 'vuex'
 
 export default {
-  name: "Layout",
+  name: 'Layout',
   components: {
-    TopBar,
-    NavBar,
-    SideBar,
     AppMain,
-    ByuiMain,
-    TagsView,
-    ByuiBackToTop,
+    Navbar,
+    RightPanel,
+    Settings,
+    Sidebar,
+    TagsView
   },
   mixins: [ResizeMixin],
-  data() {
-    return {};
-  },
   computed: {
-    ...mapGetters(["layout", "tagsView", "collapse", "header", "device"]),
+    ...mapState({
+      sidebar: state => state.app.sidebar,
+      device: state => state.app.device,
+      showSettings: state => state.settings.showSettings,
+      needTagsView: state => state.settings.tagsView,
+      fixedHeader: state => state.settings.fixedHeader
+    }),
     classObj() {
       return {
-        mobile: this.device === "mobile",
-      };
-    },
-  },
-  mounted() {
-    this.$nextTick(() => {
-      window.addEventListener(
-        "storage",
-        (e) => {
-          if (e.key === tokenName || e.key === null) window.location.reload();
-          if (e.key === tokenName && e.value === null) window.location.reload();
-        },
-        false
-      );
-    });
+        hideSidebar: !this.sidebar.opened,
+        openSidebar: this.sidebar.opened,
+        withoutAnimation: this.sidebar.withoutAnimation,
+        mobile: this.device === 'mobile'
+      }
+    }
   },
   methods: {
     handleClickOutside() {
-      this.$store.dispatch("settings/foldSideBar");
-      $("body").attr("style", "");
-    },
-  },
-};
+      this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@mixin fix-header {
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  z-index: 97;
-  width: 100%;
-  overflow: hidden;
-}
+  @import "~@/styles/mixin.scss";
+  @import "~@/styles/variables.scss";
 
-.app-wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-
-  .layout-container-horizontal {
+  .app-wrapper {
+    @include clearfix;
     position: relative;
+    height: 100%;
+    width: 100%;
 
-    &.fixed {
-      padding-top: 96px;
-    }
-
-    &.fixed.no-tags-view {
-      padding-top: 56px;
-    }
-
-    ::v-deep {
-      .byui-main {
-        width: 88%;
-      }
-
-      .fixed-header {
-        @include fix-header;
-      }
-
-      .tag-view-show {
-        background: $base-color-white;
-        box-shadow: $base-box-shadow;
-      }
-
-      .nav-bar-container {
-        .fold-unfold {
-          display: none;
-        }
-      }
-
-      .main-padding {
-        margin-top: 15px;
-        margin-bottom: 15px;
-
-        .app-main-container {
-          background: $base-color-white;
-          min-height: calc(100vh - 180px);
-        }
-      }
-    }
-  }
-
-  .layout-container-vertical {
-    position: relative;
-
-    .mask {
-      background: #000;
-      opacity: 0.5;
-      width: 100%;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      height: 100vh;
+    &.mobile.openSidebar {
       position: fixed;
-      z-index: 98;
-      overflow: hidden;
-    }
-
-    &.fixed {
-      padding-top: 96px;
-    }
-
-    &.fixed.no-tags-view {
-      padding-top: 56px;
-    }
-
-    .byui-main {
-      margin-left: $base-left-menu-width;
-      background: #f6f8f9;
-      min-height: 100%;
-      transition: margin-left 0.28s;
-      position: relative;
-
-      ::v-deep {
-        .fixed-header {
-          @include fix-header;
-          transition: all 0.28s;
-          left: $base-left-menu-width;
-          width: $base-right-content-width;
-          box-shadow: $base-box-shadow;
-        }
-
-        .nav-bar-container {
-          position: relative;
-          box-sizing: border-box;
-        }
-
-        .tags-view-container {
-          padding-left: 5px;
-          padding-right: 5px;
-          box-sizing: border-box;
-        }
-
-        .app-main-container {
-          margin: 15px auto;
-          width: calc(100% - 30px);
-          border-radius: $base-border-radius;
-          background: $base-color-white;
-          min-height: calc(100vh - 127px);
-          box-shadow: $base-box-shadow;
-        }
-      }
-
-      &.is-collapse-main {
-        margin-left: $base-left-menu-width-min;
-
-        ::v-deep {
-          .fixed-header {
-            width: calc(100% - 65px);
-            left: $base-left-menu-width-min;
-          }
-        }
-      }
+      top: 0;
     }
   }
 
-  /*手机端开始*/
-  &.mobile {
-    ::v-deep {
-      .el-pager,
-      .el-pagination__jump {
-        display: none;
-      }
-
-      .layout-container-vertical {
-        .el-scrollbar.side-bar-container.is-collapse {
-          width: 0;
-        }
-
-        .byui-main {
-          width: 100%;
-          margin-left: 0;
-
-          .app-main-container {
-            margin: 5px !important;
-            width: calc(100% - 10px) !important;
-          }
-        }
-      }
-
-      .byui-main {
-        .fixed-header {
-          left: 0 !important;
-          width: 100% !important;
-        }
-      }
-    }
+  .drawer-bg {
+    background: #000;
+    opacity: 0.3;
+    width: 100%;
+    top: 0;
+    height: 100%;
+    position: absolute;
+    z-index: 999;
   }
 
-  /*手机端结束*/
-}
+  .fixed-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 9;
+    width: calc(100% - #{$sideBarWidth});
+    transition: width 0.28s;
+  }
+
+  .hideSidebar .fixed-header {
+    width: calc(100% - 54px)
+  }
+
+  .mobile .fixed-header {
+    width: 100%;
+  }
 </style>

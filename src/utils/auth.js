@@ -1,4 +1,4 @@
-import {  tokenName } from "@/config/settings";
+import {  tokenName } from "@/settings";
 
 
 export function getToken() {

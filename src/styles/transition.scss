@@ -1,7 +1,9 @@
-@charset "utf-8";
+// global transition css
+
+/* fade */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.2s;
+  transition: opacity 0.28s;
 }
 
 .fade-enter,
@@ -9,9 +11,10 @@
   opacity: 0;
 }
 
+/* fade-transform */
 .fade-transform-leave-active,
 .fade-transform-enter-active {
-  transition: all 0.2s;
+  transition: all .5s;
 }
 
 .fade-transform-enter {
@@ -24,9 +27,10 @@
   transform: translateX(30px);
 }
 
+/* breadcrumb transition */
 .breadcrumb-enter-active,
 .breadcrumb-leave-active {
-  transition: all 0.2s;
+  transition: all .5s;
 }
 
 .breadcrumb-enter,
@@ -36,7 +40,7 @@
 }
 
 .breadcrumb-move {
-  transition: all 0.3s;
+  transition: all .5s;
 }
 
 .breadcrumb-leave-active {

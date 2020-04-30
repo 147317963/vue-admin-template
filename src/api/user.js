@@ -16,11 +16,11 @@ export function login(data) {
  * 获得用户信息
  * @param token
  */
-export function getInfo(token) {
+export function getInfo() {
   return request({
     url: '/v2/user/getInfo',
     method: 'get',
-    params: { token }
+    // params: { token }
   })
 }
 

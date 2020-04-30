@@ -1,7 +1,7 @@
 /* 公共引入,勿随意修改,修改时需经过确认 */
 //这里是加载CSS
 import 'normalize.css/normalize.css' // 一个现代的替代CSS重置
-import '@/styles/byui.scss' // 全局 css
+
 
 
 //这里加载JS
@@ -9,7 +9,7 @@ import Vue from 'vue'
 import "./element"; //引入element-ui
 import "@/icons";//引入icons
 import "./byuiIcon";//引入icons
-import "@/config/permission"; // 路由卫士
+import "@/permission"; // 路由卫士
 import VueLazyload from 'vue-lazyload' //图片懒加载
 
 

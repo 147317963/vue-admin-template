@@ -66,15 +66,15 @@ module.exports = {
     transpileDependencies: ['vue-echarts', 'resize-detector'],
     //   lintOnSave：{ type:Boolean default:true } 问你是否使用eslint
     lintOnSave: true,
-    css: {
-        requireModuleExtension: true,
-        sourceMap: true,
-        loaderOptions: {
-            scss: {
-                prependData: '@import "~@/styles/variables.scss";',
-            },
-        },
-    },
+    // css: {
+    //     requireModuleExtension: true,
+    //     sourceMap: true,
+    //     loaderOptions: {
+    //         scss: {
+    //             prependData: '@import "~@/styles/variables.scss";',
+    //         },
+    //     },
+    // },
     // css: {
     //     loaderOptions: {
     //         postcss: {

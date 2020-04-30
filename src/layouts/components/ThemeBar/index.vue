@@ -125,7 +125,7 @@
     paginationActiveBackground,
   } from "@/styles/variables.scss";
   import { mapGetters } from "vuex";
-  import { themeBar } from "@/config/settings";
+  import { themeBar } from "@/settings";
 
   export default {
     name: "ThemeBar",

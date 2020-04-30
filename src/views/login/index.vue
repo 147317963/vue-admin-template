@@ -112,7 +112,6 @@ export default {
                   .dispatch("user/login", this.loginForm)
                   .then(() => {
                     const routerPath = this.redirect === "/404" ? "/" : this.redirect;
-                    console.log(routerPath);
                     this.$router.push({ path: routerPath || "/" });
                     this.loading = false;
                   })

@@ -1,59 +1,60 @@
 <template>
-<!--  全屏插件-->
-  <span :title="isFullscreen ? '退出全屏' : '进入全屏'">
-    <svg-icon
-      :icon-class="isFullscreen ? 'exit-fullscreen' : 'fullscreen'"
-      @click="click"
-  /></span>
+  <div>
+    <svg-icon :icon-class="isFullscreen?'exit-fullscreen':'fullscreen'" @click="click" />
+  </div>
 </template>
 
 <script>
-import screenfull from "screenfull";
+import screenfull from 'screenfull'
 
 export default {
-  name: "Screenfull",
+  name: 'Screenfull',
   data() {
     return {
-      isFullscreen: false,
-    };
+      isFullscreen: false
+    }
   },
   mounted() {
-    this.init();
+    this.init()
   },
   beforeDestroy() {
-    this.destroy();
+    this.destroy()
   },
   methods: {
     click() {
-      if (!screenfull.isEnabled) {
-        this.Message({
-          offset: 60,
-          showClose: true,
-          message: '开启全屏失败',
-          type: "error",
-          dangerouslyUseHTMLString: true,
-          duration: 2000,
-        });
-        return false;
+      if (!screenfull.enabled) {
+        this.$message({
+          message: '您的浏览器无法工作',
+          type: 'warning'
+        })
+        return false
       }
-      screenfull.toggle();
-      this.$emit("refresh");
+      screenfull.toggle()
     },
     change() {
-      this.isFullscreen = screenfull.isFullscreen;
+      this.isFullscreen = screenfull.isFullscreen
     },
     init() {
-      if (screenfull.isEnabled) {
-        screenfull.on("change", this.change);
+      if (screenfull.enabled) {
+        screenfull.on('change', this.change)
       }
     },
     destroy() {
-      if (screenfull.isEnabled) {
-        screenfull.off("change", this.change);
+      if (screenfull.enabled) {
+        screenfull.off('change', this.change)
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.screenfull-svg {
+  display: inline-block;
+  cursor: pointer;
+  fill: #5a5e66;;
+  width: 20px;
+  height: 20px;
+  vertical-align: 10px;
+}
+</style>

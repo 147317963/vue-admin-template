@@ -1,7 +1,7 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 
 /**
- * 使用元。角色，以确定当前用户是否具有权限
+ * Use meta.role to determine if the current user has permission
  * @param roles
  * @param route
  */
@@ -14,7 +14,7 @@ function hasPermission(roles, route) {
 }
 
 /**
- * 通过递归过滤异步路由表
+ * Filter asynchronous routing tables by recursion
  * @param routes asyncRoutes
  * @param roles
  */
@@ -43,22 +43,16 @@ const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
-  },
-  SET_ALL_ROUTES: (state, routes) => {
-    state.routes = constantRoutes.concat(routes);
-  },
+  }
 }
 
 const actions = {
   setRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes
-      //角色权限是否是admin
       if (roles.includes('admin')) {
-        //是就导入全部异步路由
         accessedRoutes = asyncRoutes || []
       } else {
-        //不是就查询该用户能操作的异步路由
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
       commit('SET_ROUTES', accessedRoutes)

@@ -5,7 +5,7 @@ Vue.use(VueRouter)
 /* Layout */
 import Layout from '@/layouts'
 //跳转401
-import EmptyLayout from "@/layouts/EmptyLayout";
+
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -40,6 +40,7 @@ export const constantRoutes = [
         hidden: true,
     },
     {
+        //用于刷新的
         path: "/redirect",
         name:'redirect',
         component: Layout,
@@ -62,12 +63,12 @@ export const asyncRoutes = [
     {
         path: "/",
         component: Layout,
-        redirect: "/index",
+        redirect: "/dashboard",
         children: [
             {
-                path: "/index",
-                name: "Index",
-                component: () => import("@/views/index"),
+                path: "/dashboard",
+                name: "dashboard",
+                component: () => import("@/views/dashboard/index"),
                 meta: {
                     title: "首页",
                     icon: "home",

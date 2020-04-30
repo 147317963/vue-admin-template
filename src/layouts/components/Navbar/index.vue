@@ -1,220 +1,153 @@
 <template>
-  <div class="nav-bar-container">
-    <el-row :gutter="15">
-      <el-col :xs="4" :sm="12" :md="12" :lg="12" :xl="12">
-        <div class="left-panel">
-          <i
-            :class="collapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
-            :title="collapse ? '展开' : '收起'"
-            class="fold-unfold"
-            @click="handleCollapse"
-          ></i>
-          <breadcrumb class="hidden-xs-only" />
-        </div>
-      </el-col>
-      <el-col :xs="20" :sm="12" :md="12" :lg="12" :xl="12">
-        <div class="right-panel">
-          <error-log />
-          <screenfull @refresh="refreshSelectedTag"></screenfull>
-          <theme-bar></theme-bar>
-          <byui-icon
-            title="重载路由"
-            :pulse="pulse"
-            :icon="['fas', 'redo']"
-            @click="refreshSelectedTag"
-          />
+  <div class="navbar">
+    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
-          <el-dropdown @command="handleCommand">
-            <span class="el-dropdown-link">
-              <el-avatar
-                class="user-avatar"
-                :src="require('@/assets/user.gif')"
-              ></el-avatar>
-              <span class="user-name">{{ name }}</span>
-              <i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>
-                <byui-icon :icon="['fas', 'user']"></byui-icon>
-                个人中心
-              </el-dropdown-item>
-              <el-dropdown-item command="logout" divided>
-                <byui-icon :icon="['fas', 'sign-out-alt']"></byui-icon>
-                退出登录
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
-          <!--  <byui-icon
-            title="退出系统"
-            :icon="['fas', 'sign-out-alt']"
-            @click="logout"
-          />-->
+    <div class="right-menu">
+      <template v-if="device!=='mobile'">
+<!--        <search id="header-search" class="right-menu-item" />-->
+
+        <error-log class="errLog-container right-menu-item hover-effect" />
+
+        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+
+        <el-tooltip content="Global Size" effect="dark" placement="bottom">
+          <size-select id="size-select" class="right-menu-item hover-effect" />
+        </el-tooltip>
+
+      </template>
+
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+        <div class="avatar-wrapper">
+          <img v-lazy="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <i class="el-icon-caret-bottom" />
         </div>
-      </el-col>
-    </el-row>
+        <el-dropdown-menu slot="dropdown">
+          <router-link to="/profile/index">
+            <el-dropdown-item>Profile</el-dropdown-item>
+          </router-link>
+          <router-link to="/">
+            <el-dropdown-item>Dashboard</el-dropdown-item>
+          </router-link>
+          <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
+            <el-dropdown-item>Github</el-dropdown-item>
+          </a>
+          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
+            <el-dropdown-item>Docs</el-dropdown-item>
+          </a>
+          <el-dropdown-item divided @click.native="logout">
+            <span style="display:block;">Log Out</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import ErrorLog from "@/components/ErrorLog";
-import Screenfull from "@/components/Screenfull";
-import Breadcrumb from "@/layouts/components/Breadcrumb";
-import ThemeBar from "@/layouts/components/ThemeBar";
-
-export default {
-  components: {
-    Breadcrumb,
-    ErrorLog,
-    Screenfull,
-    ThemeBar,
-  },
-  data() {
-    return {
-      pulse: false,
-    };
-  },
-  computed: {
-    ...mapGetters([
-      "avatar",
-      "collapse",
-      "name",
-      "loginTimes",
-      "lastLoginTime",
-      "selectedTag",
-      "device",
-    ]),
-  },
-  methods: {
-    handleCollapse() {
-      this.$store.dispatch("settings/changeCollapse");
-      if ("mobile" === this.device && false === this.collapse) {
-        $("body").attr("style", "overflow:hidden");
-      }
+  import { mapGetters } from 'vuex'
+  import Breadcrumb from '@/components/Breadcrumb'//多页面路径
+  import Hamburger from '@/components/Hamburger'
+  import ErrorLog from '@/components/ErrorLog'   //报错
+  import Screenfull from '@/components/Screenfull' //放大浏览器缩小浏览器
+  import SizeSelect from '@/components/SizeSelect' //字体
+  import Search from '@/components/HeaderSearch' //头部搜索
+  export default {
+    components: {
+      Breadcrumb,
+      Hamburger,
+      ErrorLog,
+      Screenfull,
+      SizeSelect,
+      Search
     },
-    async logout() {
-      await this.$baseConfirm(
-        "您确定要退出" + this.$baseTitle + "吗?",
-        null,
-        () => {
-          const fullPath = this.$route.fullPath;
-          this.$store.dispatch("user/logout");
-          //this.$router.push(`/login?redirect=${fullPath}`);
-        }
-      );
+    computed: {
+      ...mapGetters([
+        'sidebar',
+        'avatar',
+        'device'
+      ])
     },
-    refreshSelectedTag() {
-      this.pulse = true;
-      const view = this.selectedTag;
-      this.$store.dispatch("tagsView/delCachedView", view).then(() => {
-        const { fullPath } = view;
-        this.$nextTick(() => {
-          this.$router
-            .replace({
-              path: "/redirect" + fullPath,
-            })
-            .then(() => {
-              setTimeout(() => {
-                this.pulse = false;
-              }, 1000);
-            });
-        });
-      });
-    },
-    handleCommand(command) {
-      switch (command) {
-        case "logout":
-          this.logout();
-          break;
-      }
-    },
-  },
-};
-</script>
-
-<style lang="scss" scoped>
-  .nav-bar-container {
-    user-select: none;
-    height: 50px;
-    overflow: hidden;
-    position: relative;
-    background: $base-color-white;
-    box-shadow: $base-box-shadow;
-    .left-panel {
-      display: flex;
-      justify-items: center;
-      align-items: center;
-      height: 50px;
-      max-height: 50px;
-      .fold-unfold {
-        font-size: 20px;
-        color: $base-color-gray;
-        cursor: pointer;
-        margin-left: 10px;
-      }
-      .fold-unfold.el-icon-s-unfold {
-      }
-      ::v-deep {
-        .breadcrumb-container {
-          margin-left: 10px;
-        }
-      }
-    }
-    .right-panel {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      align-content: center;
-      height: 50px;
-      .user-avatar {
-        margin-right: 5px;
-        cursor: pointer;
-        font-weight: 600;
-      }
-      .user-name {
-        margin-right: 35px;
-        margin-left: 5px;
-        cursor: pointer;
-        font-weight: 600;
-        position: relative;
-        top: -14px;
-      }
-      .user-name + i {
-        position: absolute;
-        top: 16px;
-        right: 15px;
-      }
-      ::v-deep {
-        svg {
-          width: 1em;
-          height: 1em;
-          color: $base-color-gray;
-          fill: $base-color-gray;
-          margin-right: 15px;
-          cursor: pointer;
-          font-size: $base-font-size-big;
-          cursor: pointer;
-        }
-        button {
-          svg {
-            color: $base-color-white;
-            fill: $base-color-white;
-            margin-right: 0px;
-            cursor: pointer;
-          }
-        }
-        .el-badge {
-          margin-right: 15px;
-        }
+    methods: {
+      toggleSideBar() {
+        this.$store.dispatch('app/toggleSideBar')
+      },
+      async logout() {
+        await this.$store.dispatch('user/logout')
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
       }
     }
   }
-</style>
-<style>
-  .el-dropdown-menu--small .el-dropdown-menu__item {
-    line-height: 36px !important;
-    padding: 0 15px;
-    font-size: 13px;
+</script>
+
+<style lang="scss" scoped>
+  .navbar {
+    height: 50px;
+    overflow: hidden;
+    position: relative;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    .hamburger-container {
+      line-height: 46px;
+      height: 100%;
+      float: left;
+      cursor: pointer;
+      transition: background .3s;
+      -webkit-tap-highlight-color:transparent;
+      &:hover {
+        background: rgba(0, 0, 0, .025)
+      }
+    }
+    .breadcrumb-container {
+      float: left;
+    }
+    .errLog-container {
+      display: inline-block;
+      vertical-align: top;
+    }
+    .right-menu {
+      float: right;
+      height: 100%;
+      line-height: 50px;
+      &:focus {
+        outline: none;
+      }
+      .right-menu-item {
+        display: inline-block;
+        padding: 0 8px;
+        height: 100%;
+        font-size: 18px;
+        color: #5a5e66;
+        vertical-align: text-bottom;
+        &.hover-effect {
+          cursor: pointer;
+          transition: background .3s;
+          &:hover {
+            background: rgba(0, 0, 0, .025)
+          }
+        }
+      }
+      .avatar-container {
+        margin-right: 30px;
+        .avatar-wrapper {
+          margin-top: 5px;
+          position: relative;
+          .user-avatar {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+          }
+          .el-icon-caret-bottom {
+            cursor: pointer;
+            position: absolute;
+            right: -20px;
+            top: 25px;
+            font-size: 12px;
+          }
+        }
+      }
+    }
   }
 </style>

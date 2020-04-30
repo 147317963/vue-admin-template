@@ -1,80 +1,76 @@
 <template>
-  <div :class="'logo-container-' + layout">
-    <router-link to="/">
-      <svg-icon class="logo" icon-class="vue"></svg-icon>
-      <span class="title" :title="title">
-        {{ title }}
-      </span>
-    </router-link>
+  <div class="sidebar-logo-container" :class="{'collapse':collapse}">
+    <transition name="sidebarLogoFade">
+      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
+        <img v-if="logo" :src="logo" class="sidebar-logo">
+        <h1 v-else class="sidebar-title">{{ title }} </h1>
+      </router-link>
+      <router-link v-else key="expand" class="sidebar-logo-link" to="/">
+        <img v-if="logo" :src="logo" class="sidebar-logo">
+        <h1 class="sidebar-title">{{ title }} </h1>
+      </router-link>
+    </transition>
   </div>
 </template>
+
 <script>
-import { mapGetters } from "vuex";
-export default {
-  name: "Logo",
-  data() {
-    return {
-      title: this.$baseTitle,
-    };
-  },
-  computed: {
-    ...mapGetters(["logo", "layout"]),
-  },
-};
+  export default {
+    name: 'SidebarLogo',
+    props: {
+      collapse: {
+        type: Boolean,
+        required: true
+      }
+    },
+    data() {
+      return {
+        title: 'Vue Element Admin',
+        logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      }
+    }
+  }
 </script>
+
 <style lang="scss" scoped>
-@mixin container {
-  position: relative;
-  height: 56px;
-  line-height: 56px;
-  background: $base-color-header;
-  overflow: hidden;
-}
-
-@mixin logo {
-  display: inline-block;
-  width: 32px;
-  height: 32px;
-  vertical-align: middle;
-  margin-right: 5px;
-  color: $base-title;
-}
-
-@mixin title {
-  display: inline-block;
-  color: $base-title;
-  font-weight: 600;
-  line-height: 55px;
-  font-size: $base-font-size-max;
-  vertical-align: middle;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.logo-container-horizontal {
-  @include container;
-
-  .logo {
-    @include logo;
+  .sidebarLogoFade-enter-active {
+    transition: opacity 1.5s;
   }
-
-  .title {
-    @include title;
+  .sidebarLogoFade-enter,
+  .sidebarLogoFade-leave-to {
+    opacity: 0;
   }
-}
-
-.logo-container-vertical {
-  @include container;
-  text-align: center;
-
-  .logo {
-    @include logo;
+  .sidebar-logo-container {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    background: #2b2f3a;
+    text-align: center;
+    overflow: hidden;
+    & .sidebar-logo-link {
+      height: 100%;
+      width: 100%;
+      & .sidebar-logo {
+        width: 32px;
+        height: 32px;
+        vertical-align: middle;
+        margin-right: 12px;
+      }
+      & .sidebar-title {
+        display: inline-block;
+        margin: 0;
+        color: #fff;
+        font-weight: 600;
+        line-height: 50px;
+        font-size: 14px;
+        font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+        vertical-align: middle;
+      }
+    }
+    &.collapse {
+      .sidebar-logo {
+        margin-right: 0px;
+      }
+    }
   }
-
-  .title {
-    @include title;
-    max-width: 140px;
-  }
-}
 </style>

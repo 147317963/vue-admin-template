@@ -10,6 +10,7 @@ const state = {
     name:'',
     roles:[],
     avatar:'',
+    introduction: '',
 }
 
 const mutations = {
@@ -70,18 +71,18 @@ const actions = {
     },
 
     // 获取用户信息
-    getInfo({commit, state}) {
+    getInfo({commit}) {
         return new Promise((resolve, reject) => {
-            getInfo(state.token).then(response => {
-                const {datas} = response.data
-                if (!datas) {
+            getInfo().then(response => {
+                const {result} = response.data
+                if (!result) {
                     reject('验证失败，请重新登录...')
                 }
-                const {name, avatar,roles} = datas
+                const {name, avatar,roles} = result
                 commit('SET_NAME', name)
                 commit('SET_AVATAR', avatar)
                 commit('SET_ROLES', roles)
-                resolve(datas)
+                resolve(result)
             }).catch(error => {
                 reject(error)
             })
@@ -89,12 +90,18 @@ const actions = {
     },
 
     // 用户注销
-    logout({commit, state}) {
+    logout({commit, state,dispatch}) {
         return new Promise((resolve, reject) => {
             logout(state.token).then(() => {
-                removeToken() // 必须先删除令牌
+                commit('SET_TOKEN', '')
+                commit('SET_ROLES', [])
+                removeToken()
                 resetRouter()
-                commit('RESET_STATE')
+
+                // 重置已访问的视图和缓存的视图
+                // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
+                dispatch('tagsView/delAllViews', null, { root: true })
+
                 resolve()
             }).catch(error => {
                 reject(error)
@@ -105,8 +112,9 @@ const actions = {
     // 删除令牌
     resetToken({commit}) {
         return new Promise(resolve => {
-            removeToken() // 必须先删除令牌
-            commit('RESET_STATE')
+            commit('SET_TOKEN', '')
+            commit('SET_ROLES', [])
+            removeToken()
             resolve()
         })
     }
