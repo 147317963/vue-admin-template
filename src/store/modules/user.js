@@ -33,6 +33,9 @@ const mutations = {
     SET_ROLES: (state, roles) => {
         state.roles = roles;
     },
+    SET_INTRODUCTION: (state, introduction) => {
+        state.introduction = introduction
+    },
 }
 
 const actions = {

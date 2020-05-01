@@ -54,7 +54,9 @@ service.interceptors.response.use(
         //   type: 'warning'
         // }).then(() => {
           //去除token
-          store.dispatch('user/resetToken')
+        store.dispatch('user/resetToken').then(() => {
+          location.reload()
+        })
             // location.reload();
           // })
       }

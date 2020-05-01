@@ -6,6 +6,7 @@ import store from '@/store'
 
 import VueLazyload from 'vue-lazyload' //图片懒加载
 import Element from 'element-ui'
+// import locale from 'element-ui/lib/locale/lang/en'
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 import './styles/element-variables.scss'
 
@@ -16,10 +17,13 @@ import './permission' // permission control
 
 
 
+
+
 Vue.config.productionTip = false
 
 Vue.use(Element, {
-  size: localStorage.getItem('size') || 'medium' // set element-ui default size
+  size: localStorage.getItem('size') || 'medium', // set element-ui default size
+  // locale,
 })
 
 Vue.use(VueLazyload, {

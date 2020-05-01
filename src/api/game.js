@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getMatchList(params) {
+export function getGameList(params) {
   return request({
-    url: '/v2/match/index',
+    url: '/v2/game/index',
     method: 'get',
     params
   })

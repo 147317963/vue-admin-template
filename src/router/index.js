@@ -63,12 +63,12 @@ export const asyncRoutes = [
     {
         path: "/",
         component: Layout,
-        redirect: "/dashboard",
+        redirect: "/index",
         children: [
             {
-                path: "/dashboard",
-                name: "dashboard",
-                component: () => import("@/views/dashboard/index"),
+                path: "/index",
+                name: "index",
+                component: () => import("@/views/index/index"),
                 meta: {
                     title: "首页",
                     icon: "home",
@@ -78,7 +78,33 @@ export const asyncRoutes = [
             },
         ],
     },
+    {
+        path: '/match',
+        component: Layout,
+        redirect: '/match/index',
+        alwaysShow: true, // 总是显示根菜单吗
+        meta: {
+            title: '赛事',
+            icon: 'guide',
+            roles: ['admin', 'editor'] // you can set roles in root nav
+        },
+        children: [
+            {
+                path: 'index',
+                component: () => import('@/views/match/create-editor-match/index'),
+                name: 'Guide',
+                meta: { title: '创建比赛', roles: ['admin'] }
+            },
+            {
+                path: 'index',
+                component: () => import('@/views/match/create-editor-match/index'),
+                name: 'Guide',
+                meta: { title: '玩法设置', roles: ['admin'] }
+            }
+        ],
 
+
+    },
 
 
 
