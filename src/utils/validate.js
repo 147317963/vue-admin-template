@@ -9,7 +9,7 @@ export function isExternal(path) {
 
 /**
  * @description 校验密码是否小于6位
- * @param str
+ * @param {string|number} str
  * @returns {boolean}
  */
 export function isPassword(str) {
@@ -18,7 +18,7 @@ export function isPassword(str) {
 
 /**
  * @description 判断是否为数字
- * @param value
+ * @param {string|number} value
  * @returns {boolean}
  */
 export function isNumber(value) {
@@ -28,7 +28,7 @@ export function isNumber(value) {
 
 /**
  * @description 判断是否是名称
- * @param value
+ * @param {string}value
  * @returns {boolean}
  */
 export function isName(value) {
@@ -38,7 +38,7 @@ export function isName(value) {
 
 /**
  * @description 判断是否为IP
- * @param ip
+ * @param {string}ip
  * @returns {boolean}
  */
 export function isIP(ip) {
@@ -48,7 +48,7 @@ export function isIP(ip) {
 
 /**
  * @description 判断是否是传统网站
- * @param url
+ * @param {string}url
  * @returns {boolean}
  */
 export function isUrl(url) {
@@ -58,7 +58,7 @@ export function isUrl(url) {
 
 /**
  * @description 判断是否是小写字母
- * @param str
+ * @param {string}str
  * @returns {boolean}
  */
 export function isLowerCase(str) {
@@ -68,7 +68,7 @@ export function isLowerCase(str) {
 
 /**
  * @description 判断是否是大写字母
- * @param str
+ * @param {string}str
  * @returns {boolean}
  */
 export function isUpperCase(str) {
@@ -78,7 +78,7 @@ export function isUpperCase(str) {
 
 /**
  * @description 判断是否是大写字母开头
- * @param str
+ * @param {string}str
  * @returns {boolean}
  */
 export function isAlphabets(str) {
@@ -88,7 +88,7 @@ export function isAlphabets(str) {
 
 /**
  * @description 判断是否是字符串
- * @param str
+ * @param {string}str
  * @returns {boolean}
  */
 export function isString(str) {

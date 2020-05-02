@@ -3,36 +3,41 @@ module.exports = {
 
   /**
    * @type {boolean} true | false
-   * @description Whether show the settings right-panel
+   * @description是否显示设置右侧面板
    */
   showSettings: true,
 
   /**
    * @type {boolean} true | false
-   * @description Whether need tagsView
+   * @description是否需要tagsView
    */
   tagsView: true,
 
   /**
    * @type {boolean} true | false
-   * @description Whether fix the header
+   * @description是否修复标题
    */
   fixedHeader: false,
 
   /**
    * @type {boolean} true | false
-   * @description Whether show the logo in sidebar
+   * @description是否显示侧边栏中的徽标
    */
   sidebarLogo: false,
 
   /**
-   * @type {string | array} 'production' | ['production', 'development']
-   * @description Need show err logs component.
-   * The default is only used in the production env
-   * If you want to also use it in dev, you can pass ['production', 'development']
+   * @type {string | array} 'production' | ['production'， 'development']
+   * @description需要显示err日志组件。
+   *默认值仅用于生产环境
+   *如果你也想在开发中使用它，你可以通过['production'， 'development']
    */
   errorLog: 'production',
 
-
+  /**
+   * @type {string }
+   * @description储存token名称。
+   */
   tokenName:'admin_token'
+
+
 }

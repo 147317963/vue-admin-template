@@ -28,8 +28,8 @@ function position() {
 
 /**
  * @param {number} to
- * @param {number} duration
- * @param {Function} callback
+ * @param {number}  duration
+ * @param {function}  callback
  */
 export function scrollTo(to, duration, callback) {
     const start = position()

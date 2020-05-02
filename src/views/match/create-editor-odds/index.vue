@@ -1,56 +1,33 @@
 <template>
     <div class="app-container">
         <div class="filter-container">
-            <el-tooltip class="item" effect="light" content="创建比赛" placement="top-start">
+            <el-tooltip class="item" effect="light" content="创建玩法" placement="top-start">
             <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click.stop="handleCreate">
                 创建
             </el-button>
             </el-tooltip>
 
             <el-tooltip class="item" effect="light" content="导出xlsx" placement="top-start">
-                <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+                <el-button v-waves  class="filter-item" type="primary" icon="el-icon-download" >
                     导出
                 </el-button>
             </el-tooltip>
-            <el-checkbox v-model="show.id" class="filter-item" style="margin-left:15px;" >
-                ID
-            </el-checkbox>
-            <el-checkbox v-model="show.game_name" class="filter-item" style="margin-left:15px;" >
-                游戏
-            </el-checkbox>
-            <el-checkbox v-model="show.tournament_name" class="filter-item" style="margin-left:15px;" >
-                比赛名称
-            </el-checkbox>
-            <el-checkbox v-model="show.match_name" class="filter-item" style="margin-left:15px;" >
-                vs
-            </el-checkbox>
-            <el-checkbox v-model="show.round" class="filter-item" style="margin-left:15px;" >
-                bo
-            </el-checkbox>
-            <el-checkbox v-model="show.start_time" class="filter-item" style="margin-left:15px;" >
-                比赛开始
-            </el-checkbox>
-            <el-checkbox v-model="show.end_time" class="filter-item" style="margin-left:15px;" >
-                比赛结束
-            </el-checkbox>
-            <el-checkbox v-model="show.status" class="filter-item" style="margin-left:15px;" >
-                状态
-            </el-checkbox>
+
+
         </div>
 
 
         <el-table
-                :key="tableKey"
                 v-loading="listLoading"
                 ref="multipleTable"
-                :data="list"
+                :data="match"
                 border
                 fit
                 highlight-current-row
 
                 style="width: 100%"
         >
-            <el-table-column  v-if="show.id"
+            <el-table-column
                     label="ID"
                     align="center"
                     width="70"
@@ -61,7 +38,7 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column v-if="show.game_name"
+            <el-table-column
                     label="游戏"
                     align="center"
                     width="100"
@@ -72,7 +49,7 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column  v-if="show.tournament_name"
+            <el-table-column
                     label="比赛名称"
                     align="center"
                     width="100"
@@ -83,7 +60,7 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column v-if="show.match_name"
+            <el-table-column
                     label="VS"
                     align="center"
                     width="220"
@@ -94,7 +71,7 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column  v-if="show.round"
+            <el-table-column
                     label="bo"
                     align="center"
                     width="60"
@@ -105,7 +82,7 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column  v-if="show.start_time"
+            <el-table-column
                     label="比赛开始"
                     width="150"
                     align="center"
@@ -116,7 +93,7 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column  v-if="show.end_time"
+            <el-table-column
                     width="150"
                     label="比赛结束"
                     align="center"
@@ -128,7 +105,7 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="status"  v-if="show.status"
+                    prop="status"
                     label="状态"
                     width="75"
                     align="center"
@@ -259,9 +236,7 @@
         data() {
             return {
                 //开盘数据
-                list:[],
-                //列数
-                tableKey: 0,
+                match:[],
                 listLoading:true,
                 listQuery: {
                     page: 1,
@@ -289,19 +264,6 @@
                         "update_time": '',
                         "create_time": '',
                 },
-                show:{
-                    "id": true,
-                    "game_name": true,
-                    'tournament_name':true,
-                    "match_name": true,
-                    "round": true,
-                    "status": true,
-                    "start_time": true,
-                    "end_time": true,
-
-                },
-                //下载
-                downloadLoading:false,
                 //状态打开
                 statusOptions: [
                     { key: 1, status_name: '未开始' },
@@ -339,7 +301,7 @@
             getData(){
                 getMatchList(this.listQuery).then(response=>{
                     //返回数据
-                 this.list = response.data.result;
+                 this.match = response.data.result;
 
                  this.listLoading = false
 
@@ -417,46 +379,7 @@
                 //     }
                 // })
             },
-            //导出
-            handleDownload() {
-                this.downloadLoading = true
-                import('@/vendor/Export2Excel').then(excel => {
-                    const tHeader = [
-                        "id",
-                        "game_name",
-                        'tournament_name',
-                        "match_name",
-                        "round",
-                        "status",
-                        "start_time",
-                        "end_time",
-                    ]
-                    const filterVal = [
-                        "id",
-                        "game_name",
-                        'tournament_name',
-                        "match_name",
-                        "round",
-                        "status",
-                        "start_time",
-                        "end_time",
-                    ]
-                    const data = this.formatJson(filterVal)
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: 'table-list'
-                    })
-                    this.downloadLoading = false
-                })
-            },
-            formatJson(filterVal) {
-                return this.list.map(v => filterVal.map(j => {
 
-                        return v[j]
-
-                }))
-            },
         },
         mounted() {//加载完毕后
             this.getData();

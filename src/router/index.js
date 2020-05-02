@@ -96,10 +96,10 @@ export const asyncRoutes = [
                 meta: { title: '创建比赛', roles: ['admin'] }
             },
             {
-                path: 'index',
-                component: () => import('@/views/match/create-editor-match/index'),
+                path: 'odds',
+                component: () => import('@/views/match/create-editor-odds/index'),
                 name: 'Guide',
-                meta: { title: '玩法设置', roles: ['admin'] }
+                meta: { title: '玩法赔率', roles: ['admin'] }
             }
         ],
 

@@ -18,8 +18,8 @@ function clipboardError() {
 
 /**
  * @description 复制数据
- * @param text
- * @param event
+ * @param {string}text
+ * @param {Object}event
  */
 export default function handleClipboard(text, event) {
   const clipboard = new Clipboard(event.target, {

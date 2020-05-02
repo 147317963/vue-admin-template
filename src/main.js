@@ -3,10 +3,11 @@ import App from '@/App.vue'
 import router from '@/router'
 import store from '@/store'
 
-
 import VueLazyload from 'vue-lazyload' //图片懒加载
-import Element from 'element-ui'
+import Element from 'element-ui'//ui
 // import locale from 'element-ui/lib/locale/lang/en'
+import _ from 'lodash';//数字插件
+
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 import './styles/element-variables.scss'
 
@@ -18,7 +19,7 @@ import './permission' // permission control
 
 
 
-
+Vue.prototype._= _;
 Vue.config.productionTip = false
 
 Vue.use(Element, {

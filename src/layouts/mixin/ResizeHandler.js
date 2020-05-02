@@ -12,12 +12,16 @@ export default {
     }
   },
   beforeMount() {
+
     window.addEventListener('resize', this.$_resizeHandler)
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.$_resizeHandler)
   },
   mounted() {
+    this.$store.getters.gameList.length ||  this.$store.dispatch('game/getGameList')
+    this.$store.getters.tournamentList.length ||  this.$store.dispatch('tournament/getTournamentList')
+    this.$store.getters.tournamentList.length ||  this.$store.dispatch('teamGroup/getTeamGroupList')
     const isMobile = this.$_isMobile()
     if (isMobile) {
       store.dispatch('app/toggleDevice', 'mobile')
