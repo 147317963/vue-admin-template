@@ -66,7 +66,7 @@ export const asyncRoutes = [
         redirect: "/index",
         children: [
             {
-                path: "/index",
+                path: "index",
                 name: "index",
                 component: () => import("@/views/index/index"),
                 meta: {
@@ -90,15 +90,15 @@ export const asyncRoutes = [
         },
         children: [
             {
-                path: 'index',
+                path: 'create-editor-match',
                 component: () => import('@/views/match/create-editor-match/index'),
-                name: 'Guide',
+                name: 'create-editor-match',
                 meta: { title: '创建比赛', roles: ['admin'] }
             },
             {
-                path: 'odds',
+                path: 'create-editor-odds',
                 component: () => import('@/views/match/create-editor-odds/index'),
-                name: 'Guide',
+                name: 'create-editor-odds',
                 meta: { title: '玩法赔率', roles: ['admin'] }
             }
         ],

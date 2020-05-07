@@ -6,7 +6,8 @@ import { getToken } from '@/utils/auth'
 // 创建一个axios实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url =基本url +请求url
-  timeout: 5000 // 请求超时时间
+  timeout: 5000, // 请求超时时间
+  // headers :{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
 })
 
 // request interceptor

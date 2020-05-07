@@ -1,4 +1,4 @@
-import { getTournamentList } from '@/api/tournament'
+import { getList } from '@/api/tournament'
 
 
 const state = {
@@ -8,14 +8,18 @@ const state = {
 }
 const mutations = {
     SET_TOURNAMEN_LIST: (state, list) => {
-        state.tournamentList = list
 
+        let listNew=[];
+        for(let i  in list){
+            listNew.push(list[i]) //值 ['aaa' 190 'man']
+        }
+        state.tournamentList = listNew
     }
 }
 const actions = {
-    getTournamentList({ commit }) {
+    getList({ commit }) {
         return new Promise((resolve,reject) => {
-            getTournamentList().then(response => {
+            getList().then(response => {
                 const {result} = response.data
                 commit('SET_TOURNAMEN_LIST', result);
                 resolve()

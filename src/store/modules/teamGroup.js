@@ -1,4 +1,4 @@
-import { getTeamGroupList } from '@/api/team-group'
+import { getList } from '@/api/team-group'
 
 
 const state = {
@@ -8,14 +8,18 @@ const state = {
 }
 const mutations = {
     SET_TEAM_GROUP_LIST: (state, list) => {
-        state.teamGroupList = list
+        let listNew=[];
+        for(let i  in list){
+            listNew.push(list[i]) //值 ['aaa' 190 'man']
+        }
+        state.teamGroupList = listNew
 
     }
 }
 const actions = {
-    getTeamGroupList({ commit }) {
+    getList({ commit }) {
         return new Promise((resolve,reject) => {
-            getTeamGroupList().then(response => {
+            getList().then(response => {
                 const {result} = response.data
                 commit('SET_TEAM_GROUP_LIST', result);
                 resolve()

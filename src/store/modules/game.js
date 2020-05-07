@@ -1,4 +1,4 @@
-import { getGameList } from '@/api/game'
+import { getList } from '@/api/game'
 
 
 const state = {
@@ -8,14 +8,19 @@ const state = {
 }
 const mutations = {
     SET_GAME_LIST: (state, list) => {
-        state.gameList = list
+        let listNew=[];
+        for(let i  in list){
+            listNew.push(list[i]) //值 ['aaa' 190 'man']
+
+        }
+        state.gameList = listNew;
 
     }
 }
 const actions = {
-    getGameList({ commit }) {
+    getList({ commit }) {
         return new Promise((resolve,reject) => {
-            getGameList().then(response => {
+            getList().then(response => {
                 const {result} = response.data
                 commit('SET_GAME_LIST', result);
                 resolve()

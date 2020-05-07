@@ -19,9 +19,9 @@ export default {
     window.removeEventListener('resize', this.$_resizeHandler)
   },
   mounted() {
-    this.$store.getters.gameList.length ||  this.$store.dispatch('game/getGameList')
-    this.$store.getters.tournamentList.length ||  this.$store.dispatch('tournament/getTournamentList')
-    this.$store.getters.tournamentList.length ||  this.$store.dispatch('teamGroup/getTeamGroupList')
+    this.$store.getters.gameList.length ||  this.$store.dispatch('game/getList')
+    this.$store.getters.tournamentList.length ||  this.$store.dispatch('tournament/getList')
+    this.$store.getters.tournamentList.length ||  this.$store.dispatch('teamGroup/getList')
     const isMobile = this.$_isMobile()
     if (isMobile) {
       store.dispatch('app/toggleDevice', 'mobile')
