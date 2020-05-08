@@ -28,7 +28,6 @@ router.beforeEach(async (to, from, next) => {
         } else {
             // //有具备了   就获取用户名称 方便显示在网站上
             const hasRoles = store.getters.roles && store.getters.roles.length > 0;
-            console.log(hasRoles);
             if (hasRoles) {
                 next();
             } else {

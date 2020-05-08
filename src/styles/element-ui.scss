@@ -82,3 +82,24 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+//自己添加的
+//.element ui select下拉框在ios移动端需要点击两次才能选中的问题修复
+.el-scrollbar {
+  > .el-scrollbar__bar {
+    opacity: 1 !important;
+  }
+}
+//修复表单 手机端缩水
+.el-dialog {
+  width: 600px;
+}
+//修复出现数字翻页手机端导致  太长问题   现在改成隐藏
+.app-wrapper.mobile .el-pager, .app-wrapper.mobile .el-pagination__jump {
+  display: none;
+}
+
+// 使表格兼容safari，不错位
+.el-table__body {
+  width: 100%!important;
+  table-layout: fixed !important;
+}

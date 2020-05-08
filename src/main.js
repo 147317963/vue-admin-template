@@ -30,7 +30,12 @@ Vue.use(Element, {
   size: localStorage.getItem('size') || 'medium', // set element-ui default size
   // locale,
 })
-
+//使用JSON.stringify和JSON.parse可以解决问题
+//给vue搞个clone方法    Object.assign 这样的话 复制的对象修改就不会影响到原始对象
+Vue.prototype.clone = function (o) {
+  if (!o) return ''
+  return JSON.parse(JSON.stringify(o))
+}
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   //错误加载图片
