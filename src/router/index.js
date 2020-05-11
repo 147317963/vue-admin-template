@@ -2,6 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
+//左侧菜单栏时，发现点击路由跳转相同地址 会有这个报错 https://www.cnblogs.com/sloanlv/p/11557452.html
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch(err => err)
+};
 /* Layout */
 import Layout from '@/layouts'
 //跳转401
@@ -81,7 +86,7 @@ export const asyncRoutes = [
     {
         path: '/match',
         component: Layout,
-        redirect: '/match/index',
+        redirect: '/match/create-editor-match',
         alwaysShow: true, // 总是显示根菜单吗
         meta: {
             title: '赛事',

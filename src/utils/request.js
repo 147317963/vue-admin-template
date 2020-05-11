@@ -2,7 +2,7 @@ import axios from 'axios'
 import {  Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-
+// import QS from 'qs'; // 引入qs模块，用来序列化post类型的数据，后面会提到
 // 创建一个axios实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url =基本url +请求url
@@ -43,7 +43,7 @@ service.interceptors.response.use(
       Message({
         message: response.data.message || 'Error',
         type: 'error',
-        duration: 5 * 1000
+        duration:  2000
       })
 
       // 403:需要登录或者重新登录;
@@ -62,7 +62,7 @@ service.interceptors.response.use(
           // })
       }
       //抛出错误
-      return Promise.reject(new Error(response.data.message || 'Error'))
+      return Promise.reject(new Error (response.data.message || 'Error'));
     } else {
       //等于200都算成功
       return response

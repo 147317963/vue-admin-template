@@ -3,6 +3,7 @@
     <transition name="fade-transform" mode="out-in">
       <keep-alive :include="cachedViews">
         <router-view :key="key" />
+        <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
       </keep-alive>
     </transition>
   </section>

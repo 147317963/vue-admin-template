@@ -1,7 +1,7 @@
 <template>
     <div class="app-container">
         <div class="filter-container">
-            <el-input v-model="listQuery.game_name" placeholder="搜索游戏名称" style="width: 200px;" class="filter-item"
+            <el-input v-model="listQuery.match_name" placeholder="搜索VS" style="width: 200px;" class="filter-item"
                       @keyup.enter.native="handleFilter"/>
             <el-select v-model="listQuery.status" placeholder="状态" clearable class="filter-item" style="width: 130px">
                 <el-option v-for="item in statusOptions" :key="item.key" :label="item.status_name" :value="item.key"/>
@@ -10,19 +10,18 @@
                 搜索
             </el-button>
 
-            <el-tooltip class="item" effect="light" content="创建比赛" placement="top-start">
-                <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                           @click.stop="handleCreate">
-                    创建
-                </el-button>
-            </el-tooltip>
 
-            <el-tooltip class="item" effect="light" content="导出xlsx" placement="top-start">
-                <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download"
-                           @click.stop="handleDownload">
-                    导出
-                </el-button>
-            </el-tooltip>
+            <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
+                       @click.stop="handleCreate">
+                创建
+            </el-button>
+
+
+            <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download"
+                       @click.stop="handleDownload">
+                导出
+            </el-button>
+
 
             <!--            <el-checkbox v-model="show.id" class="filter-item" style="margin-left:15px;" >-->
             <!--                ID-->
@@ -62,7 +61,7 @@
 
                 style="width: 100%"
         >
-            <el-table-column v-if="show.id"
+            <el-table-column
                              label="ID"
                              align="center"
                              width="70"
@@ -73,7 +72,7 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column v-if="show.game_name"
+            <el-table-column
                              label="游戏"
                              align="center"
                              width="100"
@@ -84,8 +83,8 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column v-if="show.tournament_name"
-                             label="比赛名称"
+            <el-table-column
+                             label="赛事名称"
                              align="center"
                              width="100"
             >
@@ -95,7 +94,7 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column v-if="show.match_name"
+            <el-table-column
                              label="VS"
                              align="center"
                              width="220"
@@ -106,7 +105,7 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column v-if="show.round"
+            <el-table-column
                              label="bo"
                              align="center"
                              width="60"
@@ -128,7 +127,7 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column v-if="show.end_time"
+            <el-table-column
                              width="150"
                              label="比赛结束"
                              align="center"
@@ -140,26 +139,31 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="status" v-if="show.status"
+                    prop="status"
                     label="状态"
                     width="75"
                     align="center"
                     show-overflow-tooltip>
                 <template slot-scope="{row}">
                     <div slot="reference" class="name-wrapper">
-                        <el-tag v-if="row.status===1" style="color: #1989fa" size="medium">
-                            未开始
-                        </el-tag>
-                        <el-tag v-if="row.status===2" style="color:#9da408" size="medium">
-                            滚盘中
-                        </el-tag>
-                        <el-tag v-if="row.status===3" style="color: #ee0a24" size="medium">
-                            已结束
-                        </el-tag>
+                        <template v-for="item in statusOptions">
+                            <el-tag v-if="row.status===item.key" :key="item.key"  :style="'color:'+item.color" size="medium">
+                                {{item.status_name}}
+                            </el-tag>
+                        </template>
+<!--                        <el-tag v-if="row.status===1" style="color: #1989fa" size="medium">-->
+<!--                            未开始-->
+<!--                        </el-tag>-->
+<!--                        <el-tag v-if="row.status===2" style="color:#9da408" size="medium">-->
+<!--                            滚盘中-->
+<!--                        </el-tag>-->
+<!--                        <el-tag v-if="row.status===3" style="color: #ee0a24" size="medium">-->
+<!--                            已结束-->
+<!--                        </el-tag>-->
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column  fixed="right" label="操作" width="150" class-name="small-padding fixed-width">
+            <el-table-column fixed="right" label="操作" width="150" class-name="small-padding fixed-width">
                 <template slot-scope="{row,$index}">
                     <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
                     <el-button size="mini" type="danger" @click="handleDelete(row,$index)">删除</el-button>
@@ -168,6 +172,7 @@
         </el-table>
         <!--        分页-->
         <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
+                    :autoScroll=false
                     @pagination="getData()"/>
         <!--        创建或者编辑-->
         <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
@@ -179,18 +184,19 @@
 
                 <el-form-item label="游戏" prop="game_name">
                     <el-col :span="7">
-                            <el-select filterable v-model="temp.game_name" class="filter-item" placeholder="游戏名称创建后不可修改!"
-                                       @change="temp.tournament_name='';
+                        <el-select :disabled="dialogStatus==='create'?false:true" filterable v-model="temp.game_name"
+                                   class="filter-item" placeholder="游戏名称创建后不可修改!"
+                                   @change="temp.tournament_name='';
                                        temp['team'][0]['team_name']='';
                                        temp['team'][1]['team_name']='';
                                        temp.game_id=$store.getters.gameList.length?$store.getters.gameList[_.findIndex($store.getters.gameList,o=> o.game_name === temp.game_name)]['id']:temp.game_id;
                                        ">
-                                <template v-for="item in this.$store.getters.gameList">
-                                    <el-option  :disabled="item.status===2"
-                                               :key="item.id" :label="item.game_name" :value="item.game_name"/>
-                                </template>
+                            <template v-for="item in this.$store.getters.gameList">
+                                <el-option :disabled="item.status===2"
+                                           :key="item.id" :label="item.game_name" :value="item.game_name"/>
+                            </template>
 
-                            </el-select>
+                        </el-select>
                     </el-col>
                     <el-col :span="1" style="max-height: 29px"></el-col>
                     <el-col :span="1" style="max-height: 29px;margin-left: 5px;margin-top: 3px;">
@@ -204,37 +210,39 @@
                 <el-form-item label="赛事名称" prop="tournament_name">
                     <el-col :span="7">
 
-                            <!--                    <el-input  v-model="temp.tournament_name" type="text" placeholder="赛事名称"  />-->
-                            <el-select filterable v-model="temp.tournament_name" class="filter-item" placeholder="赛事名称创建后不可修改!"
-                                       @change="temp.tournament_id=$store.getters.tournamentList.length?$store.getters.tournamentList[_.findIndex($store.getters.tournamentList,o=> o.tournament_name === temp.tournament_name)]['id']:temp.tournament_id;
+                        <!--                    <el-input  v-model="temp.tournament_name" type="text" placeholder="赛事名称"  />-->
+                        <el-select :disabled="dialogStatus==='create'?false:true" filterable
+                                   v-model="temp.tournament_name" class="filter-item" placeholder="赛事名称创建后不可修改!"
+                                   @change="temp.tournament_id=$store.getters.tournamentList.length?$store.getters.tournamentList[_.findIndex($store.getters.tournamentList,o=> o.tournament_name === temp.tournament_name)]['id']:temp.tournament_id;
                                    temp.tournament_short_name=$store.getters.tournamentList.length?$store.getters.tournamentList[_.findIndex($store.getters.tournamentList,o=> o.tournament_name === temp.tournament_name)]['tournament_short_name']:temp.tournament_short_name
                                   ">
-                                <template v-for="item in this.$store.getters.tournamentList">
-                                    <el-option
-                                            v-show="temp.game_name===item.game_name" :disabled="item.status===2"
-                                            :key="item.id" :label="item.tournament_name" :value="item.tournament_name"
-                                    />
-                                </template>
+                            <template v-for="item in this.$store.getters.tournamentList">
+                                <el-option
+                                        v-show="temp.game_name===item.game_name" :disabled="item.status===2"
+                                        :key="item.id" :label="item.tournament_name" :value="item.tournament_name"
+                                />
+                            </template>
 
-                            </el-select>
+                        </el-select>
                     </el-col>
 
                 </el-form-item>
                 <el-form-item label="团队">
                     <el-col :span="7">
-                        <el-form-item prop="team.0.team_name" v-if="Object.prototype.hasOwnProperty.call(temp['team'],0)">
-                                <el-select filterable v-model="temp['team'][0]['team_name']" class="filter-item"
-                                           placeholder="团队1创建不可修改!"
-                                           @change="
-                                  ">
-                                    <template v-for="item in this.$store.getters.teamGroupList">
-                                        <el-option
-                                                v-show="temp.game_name===item.game_name" :disabled="item.status===2"
-                                                :key="item.id" :label="item.team_name" :value="item.team_name"
-                                        />
-                                    </template>
+                        <el-form-item prop="team.0.team_name"
+                                      v-if="Object.prototype.hasOwnProperty.call(temp['team'],0)">
+                            <el-select :disabled="dialogStatus==='create'?false:true" filterable
+                                       v-model="temp['team'][0]['team_name']" class="filter-item"
+                                       placeholder="团队1创建不可修改!"
+                                      >
+                                <template v-for="item in this.$store.getters.teamGroupList">
+                                    <el-option
+                                            v-show="temp.game_name===item.game_name" :disabled="item.status===2"
+                                            :key="item.id" :label="item.team_name" :value="item.team_name"
+                                    />
+                                </template>
 
-                                </el-select>
+                            </el-select>
 
                         </el-form-item>
 
@@ -249,23 +257,24 @@
                              v-lazy="$store.getters.teamGroupList.length && Object.prototype.hasOwnProperty.call(temp['team'],1) && temp['team'][1]['team_name']?$store.getters.gameImgUrl+$store.getters.teamGroupList[_.findIndex($store.getters.teamGroupList,o=> o.team_name === temp['team'][1]['team_name'])]['team_logo']:''">
                     </el-col>
                     <el-col :span="7">
-                          <el-form-item prop="team.1.team_name" v-if="Object.prototype.hasOwnProperty.call(temp['team'],1)">
+                        <el-form-item prop="team.1.team_name"
+                                      v-if="Object.prototype.hasOwnProperty.call(temp['team'],1)">
 
 
-                              <el-select filterable v-model="temp['team'][1]['team_name']" class="filter-item"
-                                             placeholder="团队2创建不可修改"
-                                             @change="
-                                    ">
-                                      <template v-for="item in this.$store.getters.teamGroupList">
-                                          <el-option
-                                                  v-show="temp.game_name===item.game_name" :disabled="item.status===2"
-                                                  :key="item.id" :label="item.team_name" :value="item.team_name"
-                                          />
-                                      </template>
-                                  </el-select>
+                            <el-select :disabled="dialogStatus==='create'?false:true" filterable
+                                       v-model="temp['team'][1]['team_name']" class="filter-item"
+                                       placeholder="团队2创建不可修改"
+                                       >
+                                <template v-for="item in this.$store.getters.teamGroupList">
+                                    <el-option
+                                            v-show="temp.game_name===item.game_name" :disabled="item.status===2"
+                                            :key="item.id" :label="item.team_name" :value="item.team_name"
+                                    />
+                                </template>
+                            </el-select>
 
 
-                          </el-form-item>
+                        </el-form-item>
                     </el-col>
 
 
@@ -273,28 +282,29 @@
                 <el-form-item label="bo" prop="round">
                     <el-col :span="7">
 
-                        <el-select filterable v-model="temp.round" class="filter-item" placeholder="列如bo3 三局两胜 创建不可修改!">
+                        <el-select :disabled="dialogStatus==='create'?false:true" filterable v-model="temp.round"
+                                   class="filter-item" placeholder="列如bo3 三局两胜 创建不可修改!">
                             <el-option v-for="(item,index) in 9" :key="item.index" :label="'bo'+(index+1)"
                                        :value="'bo'+(index+1)"/>
                         </el-select>
 
                     </el-col>
                 </el-form-item>
-                <el-form-item label="时间" >
+                <el-form-item label="时间">
                     <el-col :span="8">
                         <el-form-item prop="start_time">
-                                <el-date-picker v-model="temp.start_time" type="datetime" placeholder="开启时间 赛事可能延迟 创建后可修改时间"
-                                                value-format="yyyy-MM-dd HH:mm:ss" style="width: 100%;"/>
+                            <el-date-picker v-model="temp.start_time" type="datetime" placeholder="开启时间 赛事可能延迟 创建后可修改时间"
+                                            value-format="yyyy-MM-dd HH:mm:ss" style="width: 100%;"/>
 
                         </el-form-item>
 
                     </el-col>
-                    <el-col class="line" :span="4" style="text-align: center"><----></el-col>
+                    <el-col class="line" :span="4" style="text-align:center">-</el-col>
                     <el-col :span="8">
                         <el-form-item prop="end_time">
 
-                                <el-date-picker v-model="temp.end_time" type="datetime" placeholder="结束时间 赛事可能延迟 创建后可修改时间"
-                                                value-format="yyyy-MM-dd HH:mm:ss" style="width: 100%;"/>
+                            <el-date-picker v-model="temp.end_time" type="datetime" placeholder="结束时间 赛事可能延迟 创建后可修改时间"
+                                            value-format="yyyy-MM-dd HH:mm:ss" style="width: 100%;"/>
 
                         </el-form-item>
                     </el-col>
@@ -304,13 +314,12 @@
                 <el-form-item label="状态" prop="status">
 
 
-
-                        <!--                            statusOptions[_.findIndex(statusOptions,o=> o.key === temp.status)].status_name-->
-                        <el-select filterable class="filter-item" v-model="temp.status" placeholder="未开始:可以下注,滚盘中:可以下注,已结束:全局禁止下注,如果想限制某种玩法下注可以去赔率设置 可修改">
-                            <el-option v-for="item in statusOptions" :key="item.key" :label="item.status_name"
-                                       :value="item.key"/>
-                        </el-select>
-
+                    <!--                            statusOptions[_.findIndex(statusOptions,o=> o.key === temp.status)].status_name-->
+                    <el-select filterable class="filter-item" v-model="temp.status"
+                               placeholder="未开始:可以下注,滚盘中:可以下注,已结束:全局禁止下注,如果想限制某种玩法下注可以去赔率设置 可修改">
+                        <el-option v-for="item in statusOptions" :key="item.key" :label="item.status_name"
+                                   :value="item.key"/>
+                    </el-select>
 
 
                 </el-form-item>
@@ -319,7 +328,8 @@
                 <el-button @click="dialogFormVisible = false">
                     取消
                 </el-button>
-                <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+                <el-button type="primary" :loading="confirmLoading"
+                           @click="dialogStatus==='create'?createData():updateData()">
 
                     {{dialogStatus==='create'?'创建':'确认'}}
                 </el-button>
@@ -334,7 +344,6 @@
     import waves from '@/directive/waves' // waves directive
     import Pagination from '@/components/Pagination'
 
-
     export default {
         name: "index",
         directives: {waves},
@@ -347,12 +356,17 @@
                 tableKey: 0,
                 //分页
                 total: 0,
+                //列表
                 listLoading: true,
+                //下载
+                downloadLoading: false,
+                //确认
+                confirmLoading: false,
                 listQuery: {
                     page: 1,
                     limit: 20,
                     importance: undefined,
-                    game_name: undefined,
+                    match_name: undefined,
                     status: undefined,
                     sort: 'id'
                 },
@@ -405,18 +419,17 @@
                     "end_time": true,
 
                 },
-                //下载
-                downloadLoading: false,
                 //状态打开
                 statusOptions: [
-                    {key: 1, status_name: '未开始'},
-                    {key: 2, status_name: '滚盘中'},
-                    {key: 3, status_name: '已结束'},
+                    {key: 1, status_name: '未开始',color: '#1989fa'},
+                    {key: 2, status_name: '滚盘中',color: '#9da408'},
+                    {key: 3, status_name: '已结束',color: '#ee0a24'},
+
                 ],
                 //是否显示
                 dialogFormVisible: false,
                 //添加还是编辑 this.dialogStatus = 'update'//更新
-                dialogStatus: '',
+                dialogStatus: 'update',
                 textMap: {
                     update: '编辑',
                     create: '创建'
@@ -432,9 +445,9 @@
                     end_time: [{required: true, message: '结束时间是必需的 创建后可修改', trigger: ['change']}],
                     game_name: [{required: true, message: '游戏是必需的 创建后不可修改', trigger: ['change']}],
                     tournament_name: [{required: true, message: '赛事名称是必需的 创建后不可修改', trigger: ['change']}],
-                    team:[
+                    team: [
                         {
-                            team_name:[{required: true, message: '团队1名称 创建后不可修改', trigger: ['change']}]
+                            team_name: [{required: true, message: '团队1名称 创建后不可修改', trigger: ['change']}]
                         },
                         {
                             team_name: [{required: true, message: '团队2名称 创建后不可修改', trigger: ['change']}],
@@ -448,18 +461,17 @@
             }
         },
         methods: {//条用方法
-            //获得比赛
+
             getData() {
+                //获得比赛
                 this.listLoading = true
                 getList(this.listQuery).then(response => {
                     this.total = response.data.result.total;
                     //返回数据
                     this.list = response.data.result.data;
-                    this.$nextTick(()=>{
+                    setTimeout(() => {
                         this.listLoading = false
-                    })
-
-
+                    }, 1000)
 
                 })
             },
@@ -555,24 +567,29 @@
             },
             //更新比赛
             updateData() {
+                //确认加载中
+                // this.confirmLoading=true;
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         const tempData = Object.assign({}, this.temp);
                         // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-                        uptateMatch(tempData).then(() => {
+                        uptateMatch(tempData).then(response => {
                             //查询匹配的ID索引
-                            // const index = this.list.findIndex(v => v.id === this.temp.id);
-                            // this.list.splice(index, 1, this.temp)
+                            const index = this.list.findIndex(v => v.id === this.temp.id);
+                            //替换数据
+                            this.list.splice(index, 1, this.temp)
                             //创建框关闭
                             this.dialogFormVisible = false
+                            //确认按钮关闭加载中
+                            // this.confirmLoading = false;
                             this.$notify({
                                 title: '成功',
-                                message: '更新 比赛成功',
+                                message: response.data.message,
                                 type: 'success',
                                 duration: 2000
                             })
                             //重新获得数据
-                            this.getData();
+                            // this.getData();
                         })
                     }
                 })
@@ -638,7 +655,7 @@
 </script>
 
 <style lang="scss" scoped>
-    .el-dialog{
+    .el-dialog {
         width: 600px;
     }
 </style>
