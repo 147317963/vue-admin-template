@@ -1,18 +1,18 @@
-import { getList } from '@/api/team-group'
+import { getList } from '@/api/match-stage'
 
 
 const state = {
 
-    teamGroupList:[],
+    matchStageList:[],
 
 }
 const mutations = {
-    SET_TEAM_GROUP_LIST: (state, list) => {
+    SET_MATCH_STAGE_LIST: (state, list) => {
         let listNew=[];
         for(let i  in list){
             listNew.push(list[i]) //值 ['aaa' 190 'man']
         }
-        state.teamGroupList = listNew
+        state.matchStageList = listNew
 
     }
 }
@@ -21,7 +21,7 @@ const actions = {
         return new Promise((resolve,reject) => {
             getList().then(res => {
                 const {result} = res.data
-                commit('SET_TEAM_GROUP_LIST', result);
+                commit('SET_MATCH_STAGE_LIST', result);
                 resolve()
             }).catch(e => {
                 reject(e)

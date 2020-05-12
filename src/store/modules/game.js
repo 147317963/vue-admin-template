@@ -20,12 +20,12 @@ const mutations = {
 const actions = {
     getList({ commit }) {
         return new Promise((resolve,reject) => {
-            getList().then(response => {
-                const {result} = response.data
+            getList().then(res => {
+                const {result} = res.data
                 commit('SET_GAME_LIST', result);
                 resolve()
-            }).catch(error => {
-                reject(error)
+            }).catch(e => {
+                reject(e)
             })
         })
     }

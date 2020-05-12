@@ -19,5 +19,6 @@ const getters = {
   gameList:state=>state.game.gameList,//游戏列表
   tournamentList:state=>state.tournament.tournamentList,//获得游戏比赛列表
   teamGroupList:state=>state.teamGroup.teamGroupList,//获得团队列表
+  matchStageList:state=>state.matchStage.matchStageList,//获得比赛阶段
 }
 export default getters

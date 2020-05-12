@@ -91,7 +91,7 @@ export const asyncRoutes = [
         meta: {
             title: '赛事',
             icon: 'guide',
-            roles: ['admin', 'editor'] // you can set roles in root nav
+            roles: ['admin', 'agent'] // you can set roles in root nav
         },
         children: [
             {
@@ -101,10 +101,16 @@ export const asyncRoutes = [
                 meta: { title: '创建比赛', roles: ['admin'] }
             },
             {
+                path: 'connection-match',
+                component: () => import('@/views/match/connection-match/index'),
+                name: 'connection-match',
+                meta: { title: '接入比赛', roles: ['admin','agent'] }
+            },
+            {
                 path: 'create-editor-odds',
                 component: () => import('@/views/match/create-editor-odds/index'),
                 name: 'create-editor-odds',
-                meta: { title: '玩法赔率', roles: ['admin'] }
+                meta: { title: '玩法赔率', roles: ['admin','agent'] }
             }
         ],
 

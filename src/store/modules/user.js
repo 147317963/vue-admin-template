@@ -52,8 +52,8 @@ const actions = {
                     mode: CryptoJS.mode.CBC,
                     padding: CryptoJS.pad.Pkcs7
                 }).toString()
-            }).then(response => {
-                const {data} = response
+            }).then(res => {
+                const {data} = res
                 commit('SET_TOKEN', data.token);
                 setToken(data.token)
                 const time = new Date();
@@ -76,11 +76,12 @@ const actions = {
     // 获取用户信息
     getInfo({commit}) {
         return new Promise((resolve, reject) => {
-            getInfo().then(response => {
-                const {result} = response.data
+            getInfo().then(res => {
+                const {result} = res.data
                 if (!result) {
                     reject('验证失败，请重新登录...')
                 }
+
                 const {name, avatar,roles} = result
                 commit('SET_NAME', name)
                 commit('SET_AVATAR', avatar)

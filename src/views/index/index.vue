@@ -38,13 +38,13 @@
         },
         methods: {//条用方法
             getData() {
-                getList().then(response => {
-                    response.data.result.data.map((item, index) => {
+                getList().then(res => {
+                    res.data.result.data.map((item, index) => {
                         if (index === 0) {
                             item.color = "#0bbd87";
                         }
                     });
-                    this.list = response.data.result.data;
+                    this.list = res.data.result.data;
 
 
                 })

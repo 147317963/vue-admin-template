@@ -37,7 +37,7 @@ router.beforeEach(async (to, from, next) => {
                     const {roles} = await store.dispatch('user/getInfo');
                     //根据角色生成可访问的路由映射
                     const accessRoutes = await store.dispatch('permission/setRoutes', roles);
-
+                    console.log(accessRoutes);
                     // 动态添加可访问路由
                     router.addRoutes(accessRoutes);
                     //修改方法，以确保addRoutes是完整的

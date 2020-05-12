@@ -1,20 +1,22 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 
 /**
- * Use meta.role to determine if the current user has permission
+ * 使用元。角色确定当前用户是否具有权限
  * @param roles
  * @param route
  */
 function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
+    // console.log(route.meta.roles.includes(roles));
+    // console.log(roles.some(role => route.meta.roles.includes(role)))
+    return route.meta.roles.includes(roles)
   } else {
     return true
   }
 }
 
 /**
- * Filter asynchronous routing tables by recursion
+ * 通过递归过滤异步路由表
  * @param routes asyncRoutes
  * @param roles
  */
@@ -48,8 +50,9 @@ const mutations = {
 
 const actions = {
   setRoutes({ commit }, roles) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       let accessedRoutes
+      //如果是admin 加载全部异步路由
       if (roles.includes('admin')) {
         accessedRoutes = asyncRoutes || []
       } else {

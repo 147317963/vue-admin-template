@@ -72,14 +72,14 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    label="bo"
+                    label="比赛阶段"
                     align="center"
-                    width="60"
+                    width="80"
             >
-                <template slot-scope="{row}" v-for="item in oddsGroupShortNameOptions">
+                <template slot-scope="{row}">
                     <div slot="reference" class="name-wrapper">
-                        <template v-for="item in oddsGroupShortNameOptions">
-                            <el-tag v-if="row.odds_group_short_name===item.key" :key="item.key"   size="medium">
+                        <template v-for="item in matchStageOptions">
+                            <el-tag v-if="row.match_stage===item.key" :key="item.key"   size="medium">
                                 {{item.status_name}}
                             </el-tag>
                         </template>
@@ -191,7 +191,11 @@
 
                         </el-select>
                     </el-col>
-
+                    <el-col :span="1" style="max-height: 29px"></el-col>
+                    <el-col :span="1" style="max-height: 29px;margin-left: 5px;margin-top: 3px;">
+                        <img style="width: 100%;height: 100%;background: #1c2236;"
+                             v-lazy="$store.getters.gameList.length && temp.game_name?$store.getters.gameImgUrl+$store.getters.gameList[_.findIndex($store.getters.gameList,o=> o.game_name === temp.game_name)]['game_logo']:''">
+                    </el-col>
 
                 </el-form-item>
 
@@ -216,79 +220,16 @@
                     </el-col>
 
                 </el-form-item>
-                <el-form-item label="团队">
-                    <el-col :span="7">
-                        <el-form-item prop="team.0.team_name"
-                                      v-if="Object.prototype.hasOwnProperty.call(temp['team'],0)">
-                            <el-select :disabled="dialogStatus==='create'?false:true" filterable
-                                       v-model="temp['team'][0]['team_name']" class="filter-item"
-                                       placeholder="团队1创建不可修改!"
-                                       @change="
-                                  ">
-                                <template v-for="item in this.$store.getters.teamGroupList">
-                                    <el-option
-                                            v-show="temp.game_name===item.game_name" :disabled="item.status===2"
-                                            :key="item.id" :label="item.team_name" :value="item.team_name"
-                                    />
-                                </template>
 
-                            </el-select>
-
-                        </el-form-item>
-
-                    </el-col>
-                    <el-col :span="7">
-                        <el-form-item prop="team.1.team_name"
-                                      v-if="Object.prototype.hasOwnProperty.call(temp['team'],1)">
-
-
-                            <el-select :disabled="dialogStatus==='create'?false:true" filterable
-                                       v-model="temp['team'][1]['team_name']" class="filter-item"
-                                       placeholder="团队2创建不可修改"
-                                       @change="
-                                    ">
-                                <template v-for="item in this.$store.getters.teamGroupList">
-                                    <el-option
-                                            v-show="temp.game_name===item.game_name" :disabled="item.status===2"
-                                            :key="item.id" :label="item.team_name" :value="item.team_name"
-                                    />
-                                </template>
-                            </el-select>
-
-
-                        </el-form-item>
-                    </el-col>
-
-
-                </el-form-item>
-                <el-form-item label="bo" prop="round">
+                <el-form-item label="比赛阶段" prop="match_stage">
                     <el-col :span="7">
 
                         <el-select :disabled="dialogStatus==='create'?false:true" filterable v-model="temp.round"
-                                   class="filter-item" placeholder="列如bo3 三局两胜 创建不可修改!">
+                                   class="filter-item" placeholder="列如全场 地图一 第一局 创建不可修改!">
                             <el-option v-for="(item,index) in 9" :key="item.index" :label="'bo'+(index+1)"
                                        :value="'bo'+(index+1)"/>
                         </el-select>
 
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="时间">
-                    <el-col :span="8">
-                        <el-form-item prop="start_time">
-                            <el-date-picker v-model="temp.start_time" type="datetime" placeholder="开启时间 赛事可能延迟 创建后可修改时间"
-                                            value-format="yyyy-MM-dd HH:mm:ss" style="width: 100%;"/>
-
-                        </el-form-item>
-
-                    </el-col>
-                    <el-col class="line" :span="4" style="text-align: center"><----></el-col>
-                    <el-col :span="8">
-                        <el-form-item prop="end_time">
-
-                            <el-date-picker v-model="temp.end_time" type="datetime" placeholder="结束时间 赛事可能延迟 创建后可修改时间"
-                                            value-format="yyyy-MM-dd HH:mm:ss" style="width: 100%;"/>
-
-                        </el-form-item>
                     </el-col>
                 </el-form-item>
 
@@ -298,7 +239,7 @@
 
                     <!--                            statusOptions[_.findIndex(statusOptions,o=> o.key === temp.status)].status_name-->
                     <el-select filterable class="filter-item" v-model="temp.status"
-                               placeholder="未开始:可以下注,滚盘中:可以下注,已结束:全局禁止下注,如果想限制某种玩法下注可以去赔率设置 可修改">
+                               placeholder="可以下注,禁止下注,已结束, 可修改,已结束后无法更改">
                         <el-option v-for="item in statusOptions" :key="item.key" :label="item.status_name"
                                    :value="item.key"/>
                     </el-select>
@@ -398,8 +339,9 @@
                     {key: 5, status_name: '已结束',color: '#ee0a24'},
                 ],
                 //win打开
-                oddsGroupShortNameOptions: [
-                    {key: 'Winner', status_name: '全场'},
+                matchStageOptions: [
+                    {key: 'final', status_name: '全场'},
+                    {key: 'r1', status_name: '第一局'},
                 ],
                 //
                 winOptions: [
@@ -416,27 +358,11 @@
                     create: '创建'
                 },
                 rules: {
-                    match_name: [
-                        {required: true, message: 'VS必须填写', trigger: ['blur']}
-                    ],
                     status: [
-                        {type: 'number', required: true, message: '状态必须填写,创建后可修改', trigger: ['change']},
+                        {type: 'number', required: true, message: '可以下注,禁止下注,已结束, 可修改,已结束后无法更改', trigger: ['change']},
                     ],
-                    start_time: [{required: true, message: '开始时间是必需的 创建后可修改', trigger: ['change']}],
-                    end_time: [{required: true, message: '结束时间是必需的 创建后可修改', trigger: ['change']}],
-                    game_name: [{required: true, message: '游戏是必需的 创建后不可修改', trigger: ['change']}],
-                    tournament_name: [{required: true, message: '赛事名称是必需的 创建后不可修改', trigger: ['change']}],
-                    team: [
-                        {
-                            team_name: [{required: true, message: '团队1名称 创建后不可修改', trigger: ['change']}]
-                        },
-                        {
-                            team_name: [{required: true, message: '团队2名称 创建后不可修改', trigger: ['change']}],
-                        }
-                    ],
-                    round: [
-                        {required: true, message: 'bo是必需的 创建后不可修改', trigger: ['change']},
-                        {min: 3, max: 3, message: '长度在 3 个字符', trigger: ['change']}
+                    match_stage: [
+                        {required: true, message: '比赛阶段 列如:全场 地图1 第一局 创建后不可修改', trigger: ['change']},
                     ]
                 },
             }
@@ -446,10 +372,10 @@
             getData() {
                 //获得比赛
                 this.listLoading = true
-                getList(this.listQuery).then(response => {
-                    this.total = response.data.result.total;
+                getList(this.listQuery).then(res => {
+                    this.total = res.data.result.total;
                     //返回数据
-                    this.list = response.data.result.data;
+                    this.list = res.data.result.data;
                     setTimeout(() => {
                         this.listLoading = false
                     }, 1000)
@@ -518,13 +444,13 @@
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         //发送创建数据
-                        createMatch(this.temp).then(response => {
+                        createMatch(this.temp).then(res => {
                             //创建框关闭
                             this.dialogFormVisible = false
                             //向前面插入数据
                             this.$notify({
                                 title: '成功',
-                                message: response.data.message,
+                                message: res.data.message,
                                 type: 'success',
                                 duration: 2000
                             })
@@ -554,7 +480,7 @@
                     if (valid) {
                         const tempData = Object.assign({}, this.temp);
                         // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-                        uptateMatch(tempData).then(response => {
+                        uptateMatch(tempData).then(res => {
                             //查询匹配的ID索引
                             const index = this.list.findIndex(v => v.id === this.temp.id);
                             //替换数据
@@ -565,7 +491,7 @@
                             // this.confirmLoading = false;
                             this.$notify({
                                 title: '成功',
-                                message: response.data.message,
+                                message: res.data.message,
                                 type: 'success',
                                 duration: 2000
                             })
